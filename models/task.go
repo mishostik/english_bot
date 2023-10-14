@@ -2,8 +2,13 @@ package models
 
 type Task struct {
 	TaskID   int    `bson:"task_id"`
-	Type     string `bson:"type"`
+	TypeID   int    `bson:"type_id"`
 	Level    string `bson:"level"`
 	Question string `bson:"question"`
 	Answer   string `bson:"answer"`
+}
+
+type TaskType struct {
+	TypeID int    `bson:"type_id"`
+	Type   string `bson:"type"`
 }

@@ -26,17 +26,19 @@ func NewUserRepository(collection *mongo.Collection) *UserRepository {
 	}
 }
 
-func (ur *UserRepository) UserByID(userID int64) (*models.User, error) {
-	//userCollection := ur.collection.Collection("users") // double shit
+func (ur *UserRepository) UserByID(userID int) (*models.User, error) {
+	log.Println("getting user by id")
 	filter := bson.M{"user_id": userID}
 	var user models.User
 	err := ur.collection.FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
+			log.Println("error no documents")
 			return nil, nil
 		}
 		return nil, err
 	}
+	log.Println("user exist")
 	return &user, err
 }
 

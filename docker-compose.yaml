@@ -10,9 +10,9 @@ services:
       - ./migrations/storage:/var/lib/postgresql/data
       - ./migrations/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
     ports:
-      - "5577:5432"
+      - "5555:5432"
   mongo:
-    image: mongo:4.4.9
+    image: mongo:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root

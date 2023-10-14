@@ -35,7 +35,7 @@ func (h *TaskHandler) HandleTasks(ctx context.Context) error {
 		Question: "Вопрос",
 		Answer:   "Ответ",
 	}
-	err = h.taskRepo.AddTask(ctx, task)
+	err = h.taskRepo.AddTask(ctx, &task)
 	if err != nil {
 		log.Println(err)
 	}

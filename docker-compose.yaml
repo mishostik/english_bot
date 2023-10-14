@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:14.0
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - ./migrations/storage:/var/lib/postgresql/data
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    ports:
+      - "5577:5432"
+  mongo:
+    image: mongo:4.4.9
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./migrations/mongo:/docker-entrypoint-initdb.d
+    ports:
+      - "5588:27017"

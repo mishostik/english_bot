@@ -36,9 +36,7 @@ func main() {
 
 	//TODO: вынести в отдельный файл инициализацию бд
 
-mongodb: //<username>:<password>@<host>:<port>/<database>
-
-	db, err := database.Connect(ctx, "english_bot", URI)
+	db, err := database.Connect(ctx, "english_bot", cfg)
 	if err != nil {
 		log.Fatal(err)
 	}

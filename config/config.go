@@ -8,8 +8,18 @@ import (
 
 // TODO MONGO config
 type Config struct {
-	Postgres PostgresConfig
-	Telegram TelegramConfig
+	Postgres PostgresConfig `mapstructure:"postgres"`
+	Telegram TelegramConfig `mapstructure:"telegram"`
+	Logger   LoggerConfig   `mapstructure:"logger"`
+}
+
+type LoggerConfig struct {
+	Level             string `yaml:"level"`
+	InFile            string `yaml:"inFile"`
+	Development       bool   `yaml:"development"`
+	DisableCaller     bool   `yaml:"disableCaller"`
+	DisableStacktrace bool   `yaml:"disableStacktrace"`
+	Encoding          string `yaml:"encoding"`
 }
 
 type PostgresConfig struct {

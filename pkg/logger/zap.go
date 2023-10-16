@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"AvitoTask/config"
+	"english_bot/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

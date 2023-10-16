@@ -18,3 +18,10 @@ Postgres:
 Telegram:
   token: "your token"
 
+logger:
+  level: "debug"
+  inFile: "./logs/app.log"
+  development: false
+  disableCaller: false
+  disableStacktrace: true
+  encoding: "json"

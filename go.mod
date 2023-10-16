@@ -8,6 +8,9 @@ require (
 )
 
 require (
+	github.com/ecies/go v1.0.1 // indirect
+	github.com/fernet/fernet-go v0.0.0-20211208181803-9f70042a33ee // indirect
+	github.com/fomichev/secp256k1 v0.0.0-20180413221153-00116ff8c62f // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

@@ -35,6 +35,9 @@ func main() {
 	defer logger.Sync()
 
 	//TODO: вынести в отдельный файл инициализацию бд
+
+mongodb: //<username>:<password>@<host>:<port>/<database>
+
 	db, err := database.Connect(ctx, "english_bot", URI)
 	if err != nil {
 		log.Fatal(err)

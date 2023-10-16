@@ -11,6 +11,15 @@ type Config struct {
 	Postgres PostgresConfig `mapstructure:"postgres"`
 	Telegram TelegramConfig `mapstructure:"telegram"`
 	Logger   LoggerConfig   `mapstructure:"logger"`
+	Mongo    MongoConfig    `mapstructure:"mongo"`
+}
+
+type MongoConfig struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	User     string `json:"user"`
+	Password string `json:"-"`
+	DBName   string `json:"DBName"`
 }
 
 type LoggerConfig struct {

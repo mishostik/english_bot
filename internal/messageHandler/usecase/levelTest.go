@@ -1,11 +1,11 @@
 package usecase
 
-func BeginTest() {
-
+type LevelTest struct {
 }
 
-func CheckAnswer() {
-
+func BeginTest() {
+	// начать отсчет 30 заданий
+	//
 }
 
 func CalculateResult() {

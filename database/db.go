@@ -7,8 +7,6 @@ import (
 	"log"
 )
 
-//type Database interface {} ?????????
-
 type Database struct {
 	client *mongo.Client
 	dbase  *mongo.Database

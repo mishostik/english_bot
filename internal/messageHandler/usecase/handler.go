@@ -2,24 +2,28 @@ package usecase
 
 import (
 	"context"
-	"english_bot/constants"
+	constants "english_bot/cconstants"
 	"english_bot/database"
+	"english_bot/handlers"
 	"english_bot/models"
 	"english_bot/pkg/utils"
 	"fmt"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"log"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 type MessageHandler struct {
-	bot      *tgbotapi.BotAPI
-	userRepo *database.UserRepository
+	bot             *tgbotapi.BotAPI
+	userRepo        *database.UserRepository
+	progressHandler *handlers.ProgressHandle
 }
 
-func InitHandler(bot *tgbotapi.BotAPI, userRepo *database.UserRepository) *MessageHandler {
+func InitHandler(bot *tgbotapi.BotAPI, userRepo *database.UserRepository, prHandler *handlers.ProgressHandle) *MessageHandler {
 	return &MessageHandler{
-		bot:      bot,
-		userRepo: userRepo,
+		bot:             bot,
+		userRepo:        userRepo,
+		progressHandler: prHandler,
 	}
 }
 
@@ -37,29 +41,30 @@ func (h *MessageHandler) RegisterUser(update tgbotapi.Update, ctx context.Contex
 	var messageText = "..."
 	userID := update.Message.From.ID
 	user := models.User{
-		UserID:       update.Message.From.ID,
+		UserID:       update.Message.From.ID, // check nil pointers
 		Username:     update.Message.From.UserName,
 		RegisteredAt: utils.GetMoscowTime(),
 		LastActiveAt: utils.GetMoscowTime(),
 		Level:        constants.LevelA0,
 		Role:         constants.RoleUser,
 	}
-	userExistence, err := h.userRepo.UserByID(userID)
+	userExistence, err := h.userRepo.UserByID(userID) // cache id
 	if err != nil {
-		messageText = "error while finding user"
+		messageText = "error while finding user" // return?
 	}
 	if userExistence == nil {
 		if err := h.userRepo.RegisterUser(ctx, &user); err != nil {
 			messageText = "error while registration"
 		} else {
 			messageText = "хотели бы пройти тест для определения вашего уровня владения английским языком?"
-			// предлагать пройти тест
 		}
 	} else {
 		messageText = "user already exist"
 	}
 	return messageText
 }
+
+func (h *MessageHandler) MessageFromEnToRu()
 
 func (h *MessageHandler) Reply(ctx context.Context, update tgbotapi.Update) error {
 	var (
@@ -82,6 +87,30 @@ func (h *MessageHandler) Reply(ctx context.Context, update tgbotapi.Update) erro
 	case "словарь":
 		messageText = "Сюда можно добавить новые слова"
 		buttons = []string{constants.MsgAddNewWord, constants.MsgGetContext}
+
+	// ВОЗМОЖНО ПЕРЕНЕСТИ В ДРУГОЕ МЕСТО, ЧТОБЫ СООБЩЕНИЯ ПРОВЕРЯЛИСЬ ИЗ РАЗДЕЛА ЗАДАНИЙ
+	case "перевод на английский":
+		// call method for handle
+		task, err := h.progressHandler.GetExercise(ctx, user.UserID, 1)
+		if err != nil {
+			messageText = "Task does not received"
+		}
+		messageText = task.Question
+
+	case "перевод на русский":
+		task, err := h.progressHandler.GetExercise(ctx, user.UserID, 2)
+		if err != nil {
+			messageText = "Task does not received"
+		}
+		messageText = task.Question
+
+	case "заполнить пропуски":
+		task, err := h.progressHandler.GetExercise(ctx, user.UserID, 3)
+		if err != nil {
+			messageText = "Task does not received"
+		}
+		messageText = task.Question
+
 	default:
 		messageText = "default"
 	}

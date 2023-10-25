@@ -8,6 +8,9 @@ require (
 )
 
 require (
+	github.com/ecies/go v1.0.1 // indirect
+	github.com/fernet/fernet-go v0.0.0-20211208181803-9f70042a33ee // indirect
+	github.com/fomichev/secp256k1 v0.0.0-20180413221153-00116ff8c62f // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -17,6 +20,7 @@ require (
 	github.com/jackc/pgx/v5 v5.4.3 // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jmoiron/sqlx v1.3.5 // indirect
+	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect

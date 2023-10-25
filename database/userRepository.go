@@ -10,12 +10,6 @@ import (
 	"log"
 )
 
-// fucking fuck
-//type UserRepository interface {
-//	UserByID(userID int64) (*models.User, error)
-//	RegisterUser(user *models.User) (bool, error)
-//}
-
 type UserRepository struct {
 	collection *mongo.Collection
 }

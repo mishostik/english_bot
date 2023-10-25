@@ -3,9 +3,12 @@ package database
 import (
 	"context"
 	"english_bot/models"
+	"errors"
 	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type TaskRepository struct {
@@ -29,4 +32,25 @@ func (tr *TaskRepository) AddTask(ctx context.Context, task *models.Task) error 
 
 func (tr *TaskRepository) RandomTask(level string) {
 
+}
+
+func (tr *TaskRepository) GetTaskByLevelAndType(ctx context.Context, level string, taskType int) (*models.Task, error) {
+
+	filter := bson.M{
+		"type_id": taskType,
+		"level":   level,
+	}
+
+	var result models.Task
+	err := tr.collection.FindOne(ctx, filter).Decode(&result)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			log.Println("task not found")
+		} else {
+			log.Println("some error")
+		}
+	} else {
+		return &result, nil
+	}
+	return nil, err
 }

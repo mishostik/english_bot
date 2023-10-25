@@ -1,20 +1,20 @@
-#Server:
-#  AppVersion: "1.0.0"
-#  Host: "0.0.0.0"
-#  Port: "11037"
-#  Timeout: 60s
-
-
-Postgres:
-  host: "0.0.0.0"
-  port: "5555"
-  user: "postgres"
-  password: "postgres"
-  DBName: "postgres"
-  sslMode: "require"
-  pgDriver: "pgx"
-
-
-Telegram:
-  token: "your token"
-
+##Server:
+##  AppVersion: "1.0.0"
+##  Host: "0.0.0.0"
+##  Port: "11037"
+##  Timeout: 60s
+#
+#
+#Postgres:
+#  host: "0.0.0.0"
+#  port: "5555"
+#  user: "postgres"
+#  password: "postgres"
+#  DBName: "postgres"
+#  sslMode: "require"
+#  pgDriver: "pgx"
+#
+#
+#Telegram:
+#  token: "your token"
+#

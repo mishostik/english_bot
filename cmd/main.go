@@ -6,21 +6,18 @@ import (
 	"english_bot/handlers"
 	handlerUseCase "english_bot/internal/messageHandler/usecase"
 	updateUseCase "english_bot/internal/updates/usecase"
-	"log"
-	"os"
-
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/joho/godotenv"
+	"log"
 )
 
 func main() {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	dbURI := os.Getenv("DB_URI")
-	dbName := os.Getenv("DB_NAME")
-	tgToken := os.Getenv("TG_TOKEN")
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	log.Fatal("Error loading .env file")
+	//}
+	//dbURI := os.Getenv("DB_URI")
+	//dbName := os.Getenv("DB_NAME")
+	//tgToken := os.Getenv("TG_TOKEN")
 
 	ctx := context.Background()
 
@@ -44,21 +41,15 @@ func main() {
 	//defer logger.Sync()
 
 	//TODO: вынести в отдельный файл инициализацию бд
-	db, err := database.Connect(ctx, dbName, dbURI)
+	//db, err := database.Connect(ctx, dbName, dbURI)
+	db, err := database.Connect(ctx, "", "")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	userCollection, err := db.Collection("users")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
 	taskCollection, err := db.Collection("tasks")
 
-	//typeCollection, err := db.Collection("task_types")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
 	progressCollection, err := db.Collection("users_progress")
 
 	userRepo := database.NewUserRepository(userCollection)
@@ -66,14 +57,21 @@ func main() {
 	//typeRepo := database.NewTypeRepository(typeCollection)
 	progressRepo := database.NewProgressRepository(progressCollection)
 
-	bot, err := tgbotapi.NewBotAPI(tgToken) // cfg.Telegram.Token
+	bot, err := tgbotapi.NewBotAPI("") // cfg.Telegram.Token
 	if err != nil {
 		log.Fatal(err)
 	}
 	updateUC := updateUseCase.Init(bot)
 
-	progressHandler := handlers.NewProgressHandle(taskRepo, userRepo, progressRepo)
-	handler := handlerUseCase.InitHandler(bot, userRepo, progressHandler)
+	messageUsecase := handlerUseCase.NewMessageHandlerUsecase(userRepo, taskRepo)
+
+	dictionaryHandler := handlers.NewDictionaryHandler()
+	exerciseHandler := handlers.NewExerciseHandler(messageUsecase)
+	progressHandler := handlers.NewProgressHandler(taskRepo, userRepo, progressRepo)
+
+	generalHandler := handlers.NewGeneralHandler(dictionaryHandler, exerciseHandler, progressHandler, messageUsecase, userRepo)
+
+	handler := handlerUseCase.InitHandler(bot, generalHandler)
 
 	//updates, _ := updateUC.NewUpdates()
 

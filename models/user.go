@@ -8,5 +8,4 @@ type User struct {
 	RegisteredAt time.Time `bson:"registered_at"`
 	LastActiveAt time.Time `bson:"last_active_at"`
 	Level        string    `bson:"level"`
-	Role         string    `bson:"role"`
 }

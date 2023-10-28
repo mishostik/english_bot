@@ -5,9 +5,10 @@ import (
 	"english_bot/models"
 	"errors"
 	"fmt"
+	"log"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 )
 
 type UserRepository struct {
@@ -20,11 +21,11 @@ func NewUserRepository(collection *mongo.Collection) *UserRepository {
 	}
 }
 
-func (ur *UserRepository) UserByID(userID int) (*models.User, error) {
-	log.Println("getting user by id")
+func (ur *UserRepository) UserByID(ctx context.Context, userID int) (*models.User, error) {
+	log.Println("getting user by id", userID)
 	filter := bson.M{"user_id": userID}
 	var user models.User
-	err := ur.collection.FindOne(context.Background(), filter).Decode(&user)
+	err := ur.collection.FindOne(ctx, filter).Decode(&user)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			log.Println("error no documents")

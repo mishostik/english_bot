@@ -17,3 +17,8 @@ func NewProgressHandler(tr *database.TaskRepository, ur *database.UserRepository
 		progressRepo: pr,
 	}
 }
+
+func (p *ProgressHandler) CheckUserAnswer(rightAnswer string, userAnswer string, userId int) error {
+	// calculate user balls
+	return nil
+}

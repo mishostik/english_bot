@@ -40,7 +40,7 @@ func (h *GeneralHandler) RegisterUser(ctx context.Context, update tgbotapi.Updat
 		Username:     update.Message.From.UserName,
 		RegisteredAt: utils.GetMoscowTime(),
 		LastActiveAt: utils.GetMoscowTime(),
-		Level:        constants.LevelA0,
+		Level:        constants.LevelB1,
 		// Role:         constants.RoleUser,
 	}
 	userExistence, err := h.userRepo.UserByID(ctx, userId) // cache id
@@ -81,12 +81,17 @@ func (h *GeneralHandler) GetMainMenu(ctx context.Context, update tgbotapi.Update
 		messageText = "Сюда можно добавить новые слова"
 		buttons = []string{constants.MsgAddNewWord, constants.MsgGetContext}
 
-	case "на главную":
-		userState = "main"
-		messageText = "Чем займемся?"
-		buttons = []string{constants.MsgDictionary, constants.MsgTasks, constants.MsgTest}
+	//case "на главную":
+	//	userState = "main"
+	//	messageText = "Чем займемся?"
+	//	buttons = []string{constants.MsgDictionary, constants.MsgTasks, constants.MsgTest}
+	//
+	//case constants.MsgGoBack:
+	//	userState = "main"
+	//	messageText = "Чем займемся?"
+	//	buttons = []string{constants.MsgDictionary, constants.MsgTasks, constants.MsgTest}
 
-	case constants.MsgGoBack:
+	case "fuck":
 		userState = "main"
 		messageText = "Чем займемся?"
 		buttons = []string{constants.MsgDictionary, constants.MsgTasks, constants.MsgTest}
@@ -101,6 +106,7 @@ func (h *GeneralHandler) GetMainMenu(ctx context.Context, update tgbotapi.Update
 func (h *GeneralHandler) Reply(bot *tgbotapi.BotAPI, ctx context.Context, update tgbotapi.Update) error {
 	var (
 		messageText = constants.MsgUnknownCommand
+		rightAnswer string
 		err         error
 		buttons     []string
 	)
@@ -108,10 +114,11 @@ func (h *GeneralHandler) Reply(bot *tgbotapi.BotAPI, ctx context.Context, update
 	switch userState {
 
 	case "exercise":
-		messageText, buttons, err = h.exHandler.Respond(ctx, update)
+		messageText, rightAnswer, buttons, err = h.exHandler.Respond(ctx, update)
 		if err != nil {
 			return err
 		}
+		userState = "inExerciseProcess"
 
 	case "test":
 		log.Println("")
@@ -121,6 +128,13 @@ func (h *GeneralHandler) Reply(bot *tgbotapi.BotAPI, ctx context.Context, update
 
 	case "main":
 		messageText, buttons = h.GetMainMenu(ctx, update)
+
+	// TODO какое задание по типу выполняет пользователь и какое задание выдать следующим
+	case "inExerciseProcess":
+		err = h.progressHandler.CheckUserAnswer(rightAnswer, update.Message.Text, update.Message.From.ID)
+		if err != nil {
+			return err
+		}
 
 	default:
 		buttons = []string{constants.MsgDictionary, constants.MsgTasks, constants.MsgTest}

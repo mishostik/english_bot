@@ -13,3 +13,6 @@ const (
 	LevelB2 = "B2"
 	LevelC1 = "C1"
 )
+
+var IncorrectAnswersEn = []string{"Exam", "Condition", "Blue", "Exercise", "Forest", "Space", "Rain", "Father", "Beast"}
+var IncorrectAnswersRu = []string{"Решение", "Космос", "Дождь", "Отец", "Зверь", "Экзамен", "Синий", "Лес", "Пример"}

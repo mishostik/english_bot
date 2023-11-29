@@ -2,19 +2,21 @@ package usecase
 
 import (
 	"context"
-	"english_bot/database"
+	"english_bot/internal/task/repository"
+	progress2 "english_bot/internal/user/repository"
 	"english_bot/models"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"log"
 	"math/rand"
 	"time"
 )
 
 type MessageHandlerUsecase struct {
-	userRepo *database.UserRepository
-	taskRepo *database.TaskRepository
+	userRepo *progress2.UserRepository
+	taskRepo *repository.TaskRepository
 }
 
-func NewMessageHandlerUsecase(uRepo *database.UserRepository, tRepo *database.TaskRepository) *MessageHandlerUsecase {
+func NewMessageHandlerUsecase(uRepo *progress2.UserRepository, tRepo *repository.TaskRepository) *MessageHandlerUsecase {
 	return &MessageHandlerUsecase{
 		userRepo: uRepo,
 		taskRepo: tRepo,
@@ -41,17 +43,10 @@ func (u *MessageHandlerUsecase) GenerateKeyboard(buttons []string) tgbotapi.Repl
 	})
 
 	var keyboardButtons [][]tgbotapi.KeyboardButton
-	for i := 0; i < len(buttons); i += 2 {
-		// Создайте два ряда кнопок
+	for _, btn := range buttons {
 		row := []tgbotapi.KeyboardButton{
-			tgbotapi.NewKeyboardButton(buttons[i]),
+			tgbotapi.NewKeyboardButton(btn),
 		}
-
-		// Проверьте, есть ли следующая кнопка, чтобы избежать выхода за пределы массива
-		if i+1 < len(buttons) {
-			row = append(row, tgbotapi.NewKeyboardButton(buttons[i+1]))
-		}
-
 		keyboardButtons = append(keyboardButtons, row)
 	}
 
@@ -84,10 +79,12 @@ func (u *MessageHandlerUsecase) GetRandomTask(ctx context.Context, userId int) (
 	)
 	user, err = u.userRepo.UserByID(ctx, userId)
 	if err != nil {
+		log.Println("error getting user")
 		return nil, err
 	}
 	task, err = u.taskRepo.GetRandomTaskByLevel(ctx, user.Level)
 	if err != nil {
+		log.Println("error getting random task")
 		return nil, err
 	}
 	return task, nil

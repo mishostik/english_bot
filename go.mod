@@ -7,6 +7,8 @@ require (
 	go.mongodb.org/mongo-driver v1.12.1
 )
 
+require github.com/google/uuid v1.4.0 // indirect
+
 require (
 	github.com/ecies/go v1.0.1 // indirect
 	github.com/fernet/fernet-go v0.0.0-20211208181803-9f70042a33ee // indirect

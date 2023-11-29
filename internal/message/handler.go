@@ -1,8 +1,8 @@
-package usecase
+package message
 
 import (
 	"context"
-	"english_bot/handlers"
+	"english_bot/internal/core"
 	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"log"
@@ -10,10 +10,10 @@ import (
 
 type MessageHandler struct {
 	bot      *tgbotapi.BotAPI
-	gHandler *handlers.GeneralHandler
+	gHandler *core.GeneralHandler
 }
 
-func InitHandler(bot *tgbotapi.BotAPI, gHandler *handlers.GeneralHandler) *MessageHandler {
+func InitHandler(bot *tgbotapi.BotAPI, gHandler *core.GeneralHandler) *MessageHandler {
 	return &MessageHandler{
 		bot:      bot,
 		gHandler: gHandler,

@@ -5,6 +5,7 @@ const (
 	RoleUser  = "User"
 )
 
+// это будет использоваться в тесте на определение уровня пользователя
 const (
 	LevelA0 = "A0"
 	LevelA1 = "A1"
@@ -14,5 +15,30 @@ const (
 	LevelC1 = "C1"
 )
 
+// TODO раписать логику стейта пользователя
+const (
+	MainState            = "Main"
+	TestState            = "Test"
+	ExercisesState       = "Exercises"
+	ExerciseProcessState = "ExerciseProcess"
+
+	RandomExercisesState     = "RandomExercises"
+	FromRuToEnExercisesState = "FromRuToEnExercises"
+	FromEnToRuExercisesState = "FromEnToRuExercises"
+	DictionaryState          = "Dictionary"
+	TranslatorState          = "Translator"
+)
+
+// TODO убрать это нахуй отсюда
+
 var IncorrectAnswersEn = []string{"Exam", "Condition", "Blue", "Exercise", "Forest", "Space", "Rain", "Father", "Beast"}
 var IncorrectAnswersRu = []string{"Решение", "Космос", "Дождь", "Отец", "Зверь", "Экзамен", "Синий", "Лес", "Пример"}
+
+const (
+	TestDescription       = "Тест на определения уровня владения языком"
+	ExerciseDescription   = "Выбери тип заданий"
+	DictionaryDescription = "Сюда можно добавить новые слова"
+	MainStateDescription  = "Чем займемся?"
+	TestQuestion          = "Хотели бы пройти тест для определения вашего уровня владения английским языком?"
+	Continue              = "Продолжим"
+)

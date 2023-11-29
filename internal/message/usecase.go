@@ -1,4 +1,4 @@
-package messageHandler
+package message
 
 import (
 	"context"
@@ -12,4 +12,5 @@ type Usecase interface {
 	GetExerciseTranslate(ctx context.Context, userID int, typeId int) (*models.Task, error)
 	GetRandomTask(ctx context.Context, userId int) (*models.Task, error)
 	GetExerciseFillGaps(ctx context.Context, userId int, typeId int) (*models.Task, error)
+	//GetRandomTaskByLevel(ctx context.Context, level string) (*models.Task, error)
 }

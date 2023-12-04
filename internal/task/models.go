@@ -9,8 +9,3 @@ type Task struct {
 	Question string    `bson:"question"`
 	Answer   string    `bson:"answer"`
 }
-
-type TaskType struct {
-	TypeID int    `bson:"type_id"`
-	Type   string `bson:"type"`
-}

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"english_bot/models"
+	"english_bot/internal/incorrect"
 	"errors"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -19,13 +19,13 @@ func NewIncorrectRepository(collection *mongo.Collection) *IncorrectRepository {
 	}
 }
 
-func (r *IncorrectRepository) GetAnswers(ctx context.Context, taskId uuid.UUID) (*models.IncorrectAnswers, error) {
+func (r *IncorrectRepository) GetAnswers(ctx context.Context, taskId uuid.UUID) (*incorrect.Answers, error) {
 	filter := bson.M{"task_id": taskId}
-	var answers models.IncorrectAnswers
+	var answers incorrect.Answers
 	err := r.collection.FindOne(ctx, filter).Decode(&answers)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return &models.IncorrectAnswers{
+			return &incorrect.Answers{
 				TaskId: taskId,
 				A:      "empty",
 				B:      "empty",

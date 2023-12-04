@@ -8,16 +8,18 @@ const (
 
 	MsgYes        = "да"
 	MsgNo         = "нет"
-	MsgDictionary = "словарь"
-	MsgTest       = "тест"
-	MsgTasks      = "задания"
+	MsgDictionary = "Словарь"
+	MsgTest       = "Тест"
+	MsgTasks      = "Задания"
 
-	MsgBeginTest       = "начать тест"
-	MsgGoBack          = "вернуться назад"
-	MsgTranslateRuToEn = "перевод на английский"
-	MsgTranslateEnToRu = "перевод на русский"
-	MsgFillGaps        = "заполнить пропуски"
+	MsgBeginTest       = "Начать тест"
+	MsgGoBack          = "Вернуться назад"
+	MsgTranslateRuToEn = "Перевод на английский"
+	MsgTranslateEnToRu = "Перевод на русский"
+	MsgFillGaps        = "Заполнить пропуски"
 
-	MsgAddNewWord = "добавить слово"
-	MsgGetContext = "получить контекст"
+	MsgAddNewWord = "Добавить слово"
+	MsgGetContext = "Получить контекст"
+
+	TaskNotFoundAnswer = "Задачи нет 😱"
 )

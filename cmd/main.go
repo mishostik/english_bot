@@ -2,10 +2,16 @@ package main
 
 import (
 	"context"
-	"english_bot/database"
-	"english_bot/handlers"
-	handlerUseCase "english_bot/internal/messageHandler/usecase"
+	"english_bot/internal/core"
+	"english_bot/internal/dictionary"
+	incorrectRepository "english_bot/internal/incorrect/repository"
+	"english_bot/internal/message"
+	messageUseCase "english_bot/internal/message/usecase"
+	"english_bot/internal/progress/repository"
+	stateUseCase "english_bot/internal/state/usecase"
+	taskRepository "english_bot/internal/task/repository"
 	updateUseCase "english_bot/internal/updates/usecase"
+	userRepository "english_bot/internal/user/repository"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	"log"
 )
@@ -23,26 +29,21 @@ func main() {
 
 	//TODO: add AE_KEY and encrypt config
 	//var shield = secure.NewShield(os.Getenv("AE_KEY"))
-
 	// viperInstance, err := config.LoadConfig()
 	// if err != nil {
 	// 	log.Fatalf("Cannot load config. Error: {%s}", err.Error())
 	// }
-
 	// cfg, err := config.ParseConfig(viperInstance)
 	// if err != nil {
 	// 	log.Fatalf("Cannot parse config. Error: {%s}", err.Error())
 	// }
-
-	//TODO: add AE_KEY and encrypt config
 	//config.DecryptConfig(cfg, shield)
 
 	//logger := logger.NewLogger(cfg).Sugar()
 	//defer logger.Sync()
 
 	//TODO: вынести в отдельный файл инициализацию бд
-	//db, err := database.Connect(ctx, dbName, dbURI)
-	db, err := database.Connect(ctx, "", "")
+	db, err := core.Connect(ctx, "english_bot", "")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,32 +52,27 @@ func main() {
 	taskCollection, err := db.Collection("tasks")
 
 	progressCollection, err := db.Collection("users_progress")
+	incAnswersCollection, err := db.Collection("incorrect_answers")
 
-	userRepo := database.NewUserRepository(userCollection)
-	taskRepo := database.NewTaskRepository(taskCollection)
-	//typeRepo := database.NewTypeRepository(typeCollection)
-	progressRepo := database.NewProgressRepository(progressCollection)
+	userRepo := userRepository.NewUserRepository(userCollection)
+	taskRepo := taskRepository.NewTaskRepository(taskCollection)
+	progressRepo := repository.NewProgressRepository(progressCollection)
+
+	incorrectAnswersRepo := incorrectRepository.NewIncorrectRepository(incAnswersCollection)
 
 	bot, err := tgbotapi.NewBotAPI("") // cfg.Telegram.Token
 	if err != nil {
 		log.Fatal(err)
 	}
 	updateUC := updateUseCase.Init(bot)
+	stateUC := stateUseCase.NewStateUseCase()
+	messageUC := messageUseCase.NewMessageHandlerUsecase(userRepo, taskRepo, incorrectAnswersRepo, progressRepo, &stateUC)
 
-	messageUsecase := handlerUseCase.NewMessageHandlerUsecase(userRepo, taskRepo)
+	dictionaryHandler := dictionary.NewDictionaryHandler()
 
-	dictionaryHandler := handlers.NewDictionaryHandler()
-	exerciseHandler := handlers.NewExerciseHandler(messageUsecase)
-	progressHandler := handlers.NewProgressHandler(taskRepo, userRepo, progressRepo)
-
-	generalHandler := handlers.NewGeneralHandler(dictionaryHandler, exerciseHandler, progressHandler, messageUsecase, userRepo)
-
-	handler := handlerUseCase.InitHandler(bot, generalHandler)
-
-	//updates, _ := updateUC.NewUpdates()
+	handler := message.InitHandler(bot, &stateUC, dictionaryHandler, messageUC)
 
 	updates, err := bot.GetUpdatesChan(updateUC.UpdateConfig)
-	//err = admin.HandleTasks(ctx)
 	if err != nil {
 		return
 	}

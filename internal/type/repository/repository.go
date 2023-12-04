@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"english_bot/models"
+	type_ "english_bot/internal/type"
 	"errors"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
@@ -20,7 +20,7 @@ func NewTypeRepository(collection *mongo.Collection) *TypeRepository {
 	}
 }
 
-func (tr *TypeRepository) AddType(ctx context.Context, taskType *models.TaskType) error {
+func (tr *TypeRepository) AddType(ctx context.Context, taskType *type_.TaskType) error {
 	_, err := tr.collection.InsertOne(ctx, taskType)
 	if err != nil {
 		return fmt.Errorf("error while adding task: %w", err)
@@ -29,9 +29,9 @@ func (tr *TypeRepository) AddType(ctx context.Context, taskType *models.TaskType
 	return nil
 }
 
-func (tr *TypeRepository) GetType(typeID int) (*models.TaskType, error) {
+func (tr *TypeRepository) GetType(typeID int) (*type_.TaskType, error) {
 	filter := bson.M{"type_id": typeID}
-	var taskType models.TaskType
+	var taskType type_.TaskType
 	err := tr.collection.FindOne(context.Background(), filter).Decode(&taskType)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {

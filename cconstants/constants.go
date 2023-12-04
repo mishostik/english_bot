@@ -5,7 +5,6 @@ const (
 	RoleUser  = "User"
 )
 
-// это будет использоваться в тесте на определение уровня пользователя
 const (
 	LevelA0 = "A0"
 	LevelA1 = "A1"
@@ -22,9 +21,11 @@ const (
 	ExercisesState       = "Exercises"
 	ExerciseProcessState = "ExerciseProcess"
 
+	DefiniteExercisesState   = "DefiniteExercises"
 	RandomExercisesState     = "RandomExercises"
 	FromRuToEnExercisesState = "FromRuToEnExercises"
 	FromEnToRuExercisesState = "FromEnToRuExercises"
+	FillGapsExercisesState   = "FillGapsExercises"
 	DictionaryState          = "Dictionary"
 	TranslatorState          = "Translator"
 )
@@ -41,4 +42,9 @@ const (
 	MainStateDescription  = "Чем займемся?"
 	TestQuestion          = "Хотели бы пройти тест для определения вашего уровня владения английским языком?"
 	Continue              = "Продолжим"
+
+	//---- Exercises ------------------------------------------------------------------------------------------------------------
+
+	DefiniteExercise = "Определенные"
+	RandomExercise   = "Любые"
 )

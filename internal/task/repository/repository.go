@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"english_bot/models"
+	"english_bot/internal/task"
 	"log"
 	"math/rand"
 	"time"
@@ -21,7 +21,7 @@ func NewTaskRepository(collection *mongo.Collection) *TaskRepository {
 	}
 }
 
-func (r *TaskRepository) GetTaskByLevelAndType(ctx context.Context, level string, taskType int) (*models.Task, error) {
+func (r *TaskRepository) GetTaskByLevelAndType(ctx context.Context, level string, taskType int) (*task.Task, error) {
 	filter := bson.M{
 		"type_id": taskType,
 		"level":   level,
@@ -38,13 +38,13 @@ func (r *TaskRepository) GetTaskByLevelAndType(ctx context.Context, level string
 		}
 	}(cursor, ctx)
 
-	var tasks []*models.Task
+	var tasks []task.Task
 	for cursor.Next(ctx) {
-		var task models.Task
-		if err := cursor.Decode(&task); err != nil {
+		var temp task.Task
+		if err := cursor.Decode(&temp); err != nil {
 			return nil, err
 		}
-		tasks = append(tasks, &task)
+		tasks = append(tasks, temp)
 	}
 
 	if len(tasks) == 0 {
@@ -56,10 +56,10 @@ func (r *TaskRepository) GetTaskByLevelAndType(ctx context.Context, level string
 
 	selectedTask := tasks[randomGenerator.Intn(len(tasks))]
 
-	return selectedTask, nil
+	return &selectedTask, nil
 }
 
-func (r *TaskRepository) GetRandomTaskByLevel(ctx context.Context, level string) (*models.Task, error) {
+func (r *TaskRepository) GetRandomTaskByLevel(ctx context.Context, level string) (*task.Task, error) {
 	log.Println("...getting random task")
 	filter := bson.M{
 		"level": level,
@@ -75,14 +75,14 @@ func (r *TaskRepository) GetRandomTaskByLevel(ctx context.Context, level string)
 		}
 	}(cursor, ctx)
 
-	var tasks []*models.Task
+	var tasks []task.Task
 	for cursor.Next(ctx) {
-		var task models.Task
-		if err := cursor.Decode(&task); err != nil {
+		var temp task.Task
+		if err := cursor.Decode(&temp); err != nil {
 			log.Println("decode error")
 			return nil, err
 		}
-		tasks = append(tasks, &task)
+		tasks = append(tasks, temp)
 	}
 
 	if len(tasks) == 0 {
@@ -95,5 +95,5 @@ func (r *TaskRepository) GetRandomTaskByLevel(ctx context.Context, level string)
 	log.Println("amount of tasks -", len(tasks))
 	selectedTask := tasks[randomGenerator.Intn(len(tasks))]
 
-	return selectedTask, nil
+	return &selectedTask, nil
 }

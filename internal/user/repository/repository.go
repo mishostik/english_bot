@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"english_bot/models"
+	"english_bot/internal/user"
 	"errors"
 	"fmt"
 	"log"
@@ -21,10 +21,10 @@ func NewUserRepository(collection *mongo.Collection) *UserRepository {
 	}
 }
 
-func (ur *UserRepository) UserByID(ctx context.Context, userID int) (*models.User, error) {
+func (ur *UserRepository) UserByID(ctx context.Context, userID int) (*user.User, error) {
 	log.Println("getting user by id", userID)
 	filter := bson.M{"user_id": userID}
-	var user models.User
+	var user user.User
 	err := ur.collection.FindOne(ctx, filter).Decode(&user)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
@@ -37,7 +37,7 @@ func (ur *UserRepository) UserByID(ctx context.Context, userID int) (*models.Use
 	return &user, err
 }
 
-func (ur *UserRepository) RegisterUser(ctx context.Context, user *models.User) error {
+func (ur *UserRepository) RegisterUser(ctx context.Context, user *user.User) error {
 	_, err := ur.collection.InsertOne(ctx, user)
 	if err != nil {
 		return fmt.Errorf("error while registering user: %w", err)

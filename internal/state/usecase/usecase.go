@@ -1,6 +1,8 @@
 package usecase
 
-import "fmt"
+import (
+	"log"
+)
 
 type StateUseCase struct {
 	UserState map[int][]string
@@ -13,15 +15,26 @@ func NewStateUseCase() StateUseCase {
 }
 
 func (u *StateUseCase) RememberUserState(userId int, newState string) {
-	u.UserState[userId] = append(u.UserState[userId], newState)
-	u.CleanUserState(userId)
+	countUserStates := len(u.UserState[userId])
+	if countUserStates == 0 {
+		u.UserState[userId] = append(u.UserState[userId], newState)
+		return
+	}
+	if u.UserState[userId][countUserStates-1] != newState {
+		u.UserState[userId] = append(u.UserState[userId], newState)
+		u.CleanUserState(userId)
+	}
 }
 
-func (u *StateUseCase) GetUserState(userId int) ([]string, error) {
-	if len(u.UserState[userId]) == 0 {
-		return []string{}, fmt.Errorf("user state empty")
+//	if len(u.UserState[userId]) == 0 {
+//		return []string{}, fmt.Errorf("user state empty")
+//	}
+func (u *StateUseCase) GetUserState(userId int) []string {
+	log.Println(" ---- user state in getting state -", userId)
+	if _, ok := u.UserState[userId]; !ok {
+		return []string{}
 	}
-	return u.UserState[userId], nil
+	return u.UserState[userId]
 }
 
 func (u *StateUseCase) CleanUserState(userId int) {
